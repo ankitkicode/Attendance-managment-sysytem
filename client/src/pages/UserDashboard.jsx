@@ -29,7 +29,18 @@ const UserDashboard = () => {
       headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
     });
     console.log(response.data);
-    setAttendance(response.data);
+    setAttendance(response.data.map(record => ({
+      ...record,
+      workingHours: record.checkOutTime ? 
+        formatWorkingHours(new Date(record.checkOutTime).getTime() - new Date(record.checkInTime).getTime()) : 
+        'Not Checked Out'
+    })));
+  };
+
+  const formatWorkingHours = (milliseconds) => {
+    const hours = Math.floor(milliseconds / 3600000);
+    const minutes = Math.floor((milliseconds % 3600000) / 60000);
+    return `${hours} hours ${minutes} minutes`;
   };
 
   const getLocation = () => {
@@ -68,6 +79,7 @@ const UserDashboard = () => {
           <th className="border px-4 py-2 text-center">S.No</th>
           <th className="border px-4 py-2 text-center">Check-in Time</th>
           <th className="border px-4 py-2 text-center">Check-out Time</th>
+          <th className="border px-4 py-2 text-center">Working Hours</th>
         </tr>
       </thead>
       <tbody>
@@ -83,11 +95,14 @@ const UserDashboard = () => {
                   ? new Date(record.checkOutTime).toLocaleString()
                   : 'Not Checked Out'}
               </td>
+              <td className="border px-4 py-2 text-center">
+                {record.workingHours === 'Not Checked Out' ? 'Not Checked Out' : record.workingHours}
+              </td>
             </tr>
           ))
         ) : (
           <tr>
-            <td colSpan="3" className="text-center text-gray-500 py-4">
+            <td colSpan="4" className="text-center text-gray-500 py-4">
               No attendance records found.
             </td>
           </tr>

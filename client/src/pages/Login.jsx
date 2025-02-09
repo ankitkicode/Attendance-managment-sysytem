@@ -20,6 +20,11 @@ const Login = () => {
       // Store token and role in localStorage
       localStorage.setItem("token", token);
       localStorage.setItem("role", user.role);
+      if(user.role === "admin"){
+        window.location.href = '/dashboard';
+        return;
+      }
+
       window.location.href = '/';
       console.log("Logged in successfully");
     } catch (err) {

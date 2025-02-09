@@ -37,7 +37,7 @@ function App() {
         />
         <Route
           path="/"
-          element={<ProtectedRoute isAuthenticated={isAuthenticated} element={<UserDashboard />} />}
+          element={<ProtectedRoute isAuthenticated={isAuthenticated && !isAdmin} element={<UserDashboard />} />}
         />
         <Route path="*" element={<ErrorPage />} />
       </Routes>
